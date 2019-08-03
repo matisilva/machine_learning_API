@@ -1,4 +1,6 @@
-# Generic API wrapper for ML model deploy
+# Generic API wrapper for ML model deploy
+This is a generic API to deploy easily Machine Learning models. 
+The implementation uses Flask and Nginx as load_balancer.
 
 ## How to run the sample model [Titanic kaggle challenge]?
 For the first time run you have to train the model. You can call..
