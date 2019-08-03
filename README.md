@@ -53,9 +53,66 @@ curl -X POST \
 ```
 
 ## How to add new models to my API
-TODO
+Suppouse you want a model called `my_new_model`
+
+1) Add a file `my_new_model.py` inside __models__ folder. There you can inherit 
+from _DefaultModel_ such as _TitanicModel_ 
+```python
+class TitanicModel(DefaultModel):
+```
+
+2) Then you can add your settings inside __settings/my_new_model__ folder
+
+3) (Optional) you can use __datasets__ folder and __scripts__ folder to place 
+sample datasets for *fit* and *predict* and also scripts for testing 
+respectively.
+
+4) If you want to serve the model you only need one more step. 
+Add your model inside in `service.py` 
+Define one new view for the model..
+```python
+# Views
+def my_new_model(args, kwargs):
+    my_new_model = kwargs.get("model")
+    try:
+        prediction = my_new_model.predict(request.json)
+    except Exception as e:
+        logging.error(e)
+        return Response("Bad Parameters",
+                        status=422,
+                        mimetype='application/json')
+    return jsonify(prediction)
+```
+
+..and don't forget to initialize your model inside models variable.
+```
+# App
+models = [..., MyNewModel()]
+```
+
+Then you will find it available to predict just in `/my_new_model>`
+
 
 ## How to scale my API?
-```bash
-docker-compose scale API=5
+First scale in `docker_compose.yml` adding new services as you want starting 
+from a copy of *api* service.
+```
+  my_new_service:
+    image: generic-ml-api
+    build: ./
+    command: "gunicorn --bind 0.0.0.0:5000 service:app"
+    volumes: 
+      - ./model_checkpoints:/src/model_checkpoints
+      - ./datasets:/src/datasets
+```
+
+..then modify the file `nginx/nginx.conf` adding your new service there..
+
+```
+     upstream apis {
+        server api:5000;
+        server api2:5000;
+        server my_new_service:5000;
+     }
+
 ```
