@@ -6,6 +6,9 @@ The implementation uses Flask and Nginx as load_balancer.
 For the first time run you have to train the model. You can call..
 
 ```bash 
+virtualenv --python=python3 .env
+source .env/bin/activate
+pip install -r requirements.txt
 python scripts/test_titanic.py
 ```
 .. to get the first model checkpoint and test the model save/load procedure.
