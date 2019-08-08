@@ -7,7 +7,7 @@ logging.basicConfig(format='%(asctime)s,%(msecs)d %(name)s \
 
 
 def make_sample_request():
-    url = "http://0.0.0.0:5000/titanic"
+    url = "http://0.0.0.0:80/titanic"
     payload = [{
         "PassengerId": 892,
         "Pclass": 3,
